@@ -88,8 +88,10 @@ terraform apply -auto-approve
 ```
 
 Create ECS cluster and create service
+
 Note: used platform_version 1.3.0 instead of 1.4.0 because 1.4.0 also requires ssm endpoint.  
 we can upgrade later.
+
 ```
 cd fargate
 
