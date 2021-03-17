@@ -15,9 +15,6 @@ resource "aws_vpc_endpoint" "s3" {
             "Principal": {
                 "AWS": "*"
             },
-            "Condition": {"StringEquals":
-              {"aws:PrincipalOrgID":["o-xxxxx"]}
-            },
             "Resource": [
                 "arn:aws:s3:::prod-${data.aws_region.current.name}-starport-layer-bucket/*${data.aws_caller_identity.current.account_id}*/*"
             ]

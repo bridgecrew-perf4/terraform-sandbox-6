@@ -17,6 +17,9 @@ resource "aws_vpc_endpoint" "ecr_api" {
             "Action": [
                 "ecr:GetAuthorizationToken"
             ],
+            "Condition": {"StringLike":
+              {"aws:PrincipalOrgID":["${var.principal_org_id}"]}
+            },
             "Resource": [ "arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*",
                           "arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository",
                           "arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/*",
@@ -34,3 +37,4 @@ EOF
   }
  
 }
+
