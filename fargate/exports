@@ -1,8 +1,0 @@
-export TF_VAR_vpc_id=vpc-changeme
-export TF_VAR_route_table_id=rtb-changeme
-export TF_VAR_subnet_id=subnet-changeme
-export TF_VAR_app_image=sample-app
-export TF_VAR_task_definition_name=sample-definition-v1
-export TF_VAR_aws_default_region=eu-west-1
-export TF_VAR_cidr=10.0.0.0/8
-export TF_VAR_prefix_list_id=pl-6da54004
