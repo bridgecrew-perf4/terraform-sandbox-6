@@ -1,8 +1,0 @@
-export TF_VAR_aws_default_region=eu-west-1
-export TF_VAR_cidr=10.0.0.0/8
-export TF_VAR_repo_name=sample-app
-export TF_VAR_principal_org_id=o-b8frhjvy1g
-
-export TF_VAR_vpc_id=vpc-changeme
-export TF_VAR_subnet_id=subnet-changeme
-export TF_VAR_route_table_id=rtb-changeme
