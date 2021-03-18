@@ -29,6 +29,18 @@ resource "aws_vpc_endpoint" "logs" {
                 "AWS": "*"
             },
             "Resource": "*"
+        },
+        {
+            "Sid": "GrantAccessToOrg",
+            "Effect": "Allow",
+            "Action": "logs:*",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Condition": {"StringLike":
+              {"aws:PrincipalOrgID":["${var.principal_org_id}"]}
+            },
+            "Resource": "*"
         }
     ]
 }
