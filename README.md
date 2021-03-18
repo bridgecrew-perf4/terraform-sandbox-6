@@ -101,25 +101,3 @@ terraform apply -auto-approve
 
 ```
 
-Issue with conditional
-
-**ERROR (CannotPullContainerError: error pulling image conf)**
-
-**REFERENCE - does not work it seems
-https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html**
-
-
-if you add the statement below to s3.tf from s3-with-conditionals, it stops working and 
-has the error shown above. 
-
-```
-diff s3.tf s3-with-conditionals 
-
->             "Condition": {"StringEquals":
->               {"aws:PrincipalOrgID":["o-xxxxx"]}
->             },
-
-
-```
-
-

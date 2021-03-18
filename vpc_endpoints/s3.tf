@@ -11,7 +11,7 @@ resource "aws_vpc_endpoint" "s3" {
         {
             "Sid": "GrantStarPort",
             "Effect": "Allow",
-            "Action": "s3:*",
+            "Action": ["s3:GetObject"],
             "Principal": {
                 "AWS": "*"
             },

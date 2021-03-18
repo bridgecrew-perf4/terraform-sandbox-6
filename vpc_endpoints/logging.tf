@@ -6,6 +6,34 @@ resource "aws_vpc_endpoint" "logs" {
   security_group_ids = [aws_security_group.vpce.id]
   subnet_ids = [var.subnet_id]
 
+  policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "GrantStarPort",
+            "Effect": "Allow",
+            "Action": [
+                       "logs:CreateLogDelivery",
+                       "logs:CreateLogGroup",
+                       "logs:CreateLogStream",
+                       "logs:DescribeLogGroups",
+                       "logs:DescribeLogStreams",
+                       "logs:GetLogDelivery",
+                       "logs:GetLogRecord",
+                       "logs:PutDestination",
+                       "logs:PutLogEvents",
+                       "logs:UpdateLogDelivery"
+                       ],
+            "Principal": {
+                "AWS": "*"
+            },
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
   tags = {
     Name        = "logs-endpoint"
     Environment = "dev"
