@@ -1,19 +1,21 @@
-# parse and get vpc_id, subnet_ids, and route_table_id
-export TF_VAR_aws_default_region=eu-west-1
-export TF_VAR_db_name=docdb-name
-
-export TF_VAR_app_image=sample-app
-export TF_VAR_task_definition_name=sample-definition-v1
-export TF_VAR_aws_default_region=eu-west-1
-export TF_VAR_prefix_list_id=pl-6da54004
-
+# general
 export TF_VAR_aws_default_region=eu-west-1
 export TF_VAR_cidr=10.0.0.0/8
-export TF_VAR_repo_name=sample-app
-export TF_VAR_principal_org_id=o-xxxxxx
 
+# record these from network
 export TF_VAR_vpc_id=vpc-changeme
 export TF_VAR_subnet_id=subnet-changeme
 export TF_VAR_route_table_id=rtb-changeme
-
 export TF_VAR_subnet_ids=subnet-changeme,subnet-changeme
+
+# document db
+export TF_VAR_db_name=docdb-name
+
+# fargate 
+export TF_VAR_app_image=sample-app
+export TF_VAR_task_definition_name=sample-definition-v1
+export TF_VAR_prefix_list_id=pl-6da54004
+export TF_VAR_repo_name=sample-app
+
+# vpc endpoints
+export TF_VAR_principal_org_id=o-xxxxxx
