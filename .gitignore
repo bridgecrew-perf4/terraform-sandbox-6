@@ -5,3 +5,14 @@ terraform.tfstate.backup
 terraform.tfstate
 exports
 /exports
+.terraform.lock.hcl
+.terraform/
+lock
+terraform.tfstate
+terraform.tfstate.backup
+lambda/venv/lib/python3.5
+lambda/venv
+*.swp
+*.swo
+*.swn
+*.pyc

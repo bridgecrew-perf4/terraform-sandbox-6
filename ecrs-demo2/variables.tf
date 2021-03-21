@@ -1,10 +1,9 @@
 variable "aws_default_region" {
-  default = "eu-west-1"
+  default = "us-east-1"
 }
 
 variable "ecr-name" {
   type        = string
-  default = "sample-app"
 }
 
 variable "image_tag_mutability" {

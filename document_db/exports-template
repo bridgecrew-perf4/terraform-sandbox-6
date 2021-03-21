@@ -1,0 +1,8 @@
+# parse and get vpc_id, subnet_ids, and route_table_id
+export TF_VAR_aws_default_region=eu-west-1
+export TF_VAR_db_name=docdb-demo-injection
+export TF_VAR_cidr=10.0.0.0/8
+
+export TF_VAR_vpc_id=vpc-03808ed4b1747e5a0
+export TF_VAR_subnet_ids=subnet-065c17ce99e6afcf9,subnet-0e95fc53239b5780d
+export TF_VAR_route_table_id=rtb-0a2ac1a99ac4ae5fd

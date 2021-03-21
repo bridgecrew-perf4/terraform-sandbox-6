@@ -1,0 +1,3 @@
+export AWS_ACCOUNT_ID=CHANGEME
+terraform apply -auto-approve
+/usr/local/bin/aws lambda update-function-code --function-name demo2-injection --region eu-west-1 --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-1.amazonaws.com/demo2:latest

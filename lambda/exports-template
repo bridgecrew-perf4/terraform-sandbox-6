@@ -1,0 +1,5 @@
+export AWS_DEFAULT_REGION=eu-west-1
+export AWS_ACCESS_KEY_ID=CHANGE
+export AWS_SECRET_ACCESS_KEY=CHANGE
+export AWS_ACCOUNT_ID=CHANGEME
+export SNS_TOPIC=arn:aws:sns:eu-west-1:${AWS_ACCOUNT_ID}:demo2-injection

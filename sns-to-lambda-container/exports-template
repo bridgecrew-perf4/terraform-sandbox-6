@@ -1,0 +1,13 @@
+export TF_VAR_aws_default_region=eu-west-1
+export TF_VAR_function_name=demo2-injection
+export TF_VAR_repo_name=demo2:latest
+export TF_VAR_memory_size=128
+export TF_VAR_timeout=120
+export TF_VAR_sns_name = demo2-injection
+export TF_VAR_mongo_username = admin123
+export TF_VAR_mongo_password = admin123
+export TF_VAR_mongo_endpoint = docdb-demo-CHANGEME.cluster-CHANGEME.eu-west-1.docdb.amazonaws.com
+export TF_VAR_cidr = 10.0.0.0/16
+export TF_VAR_subnet_id = subnet-CHANGEME
+export TF_VAR_vpc_id = vpc-CHANGEME
+export TF_VAR_image_config_command = lambda_consumer.lambda_handler

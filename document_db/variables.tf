@@ -12,7 +12,7 @@ variable "name" {
 }
 
 variable "instance_class" {
-  default = "db.r4.large"
+  default = "db.t3.medium"
 }
 
 variable "num_count" {
@@ -62,7 +62,7 @@ variable "ca_cert_identifier" {
 }
 
 variable "family" {
-  default     = "docdb3.6"
+  default     = "docdb4.0"
   description = "Version of docdb family being created"
   type        = string
 }
@@ -74,7 +74,7 @@ variable "engine" {
 }
 
 variable "engine_version" {
-  default     = "3.6.0"
+  default     = "4.0.0"
   description = "The database engine version. Updating this argument results in an outage."
   type        = string
 }
