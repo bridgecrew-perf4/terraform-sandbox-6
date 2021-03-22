@@ -40,9 +40,9 @@ class MongoDbHelper(object):
                                                                                                                          _passwd,
                                                                                                                          _host)
 
-        #conn_str = 'mongodb://{}:{}@{}:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false'.format(_user,
-        #                                                                                                                                                                  _passwd,
-        #                                                                                                                                                                  _host)
+        #conn_str = 'mongodb://{}:{}@{}:27017/?ssl=true&ssl_ca_certs=ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false'.format(_user,
+        #                                                                                                                                                     _passwd,
+        #                                                                                                                                                     _host)
  
         self.connection = MongoClient(conn_str,ssl_cert_reqs=CERT_NONE)
 
