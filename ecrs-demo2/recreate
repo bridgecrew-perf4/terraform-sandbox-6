@@ -1,3 +1,0 @@
-source exports
-terraform destroy -auto-approve
-terraform apply -auto-approve
