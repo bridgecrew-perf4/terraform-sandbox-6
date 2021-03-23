@@ -1,0 +1,131 @@
+service: app-api-saas-lambda
+
+plugins:
+   - serverless-wsgi
+custom:
+   wsgi:
+     app: run_lambda.app
+     packRequirements: false
+provider:
+  iamRoleStatements:
+      -   Effect: Allow
+          Action:
+              - S3:*
+          Resource: "*"
+  logs:
+      restApi: true
+  name: aws
+  runtime: python2.7
+  stage: ${env:STAGE}
+  region: ${env:AWS_DEFAULT_REGION}
+  AWS_ACCOUNT_ID: ${ssm:account-id}
+  API_AWS_ACCESS_KEY_ID: ${ssm:ed-app-access-key-id}
+  API_AWS_SECRET_ACCESS_KEY: ${ssm:ed-app-secret-access-key}
+  SNS_AWS_ACCESS_KEY_ID: ${ssm:jacklee0473-access-key-id}
+  SNS_AWS_SECRET_ACCESS_KEY: ${ssm:jacklee0473-secret-access-key}
+  AUTH0_CLIENT_ID: ${ssm:auth0-client-id}
+  AUTH0_CLIENT_SECRET: ${ssm:auth0-client-secret}
+  AUTH0_DOMAIN: ${ssm:auth0-domain}
+  BITBUCKET_CLIENT_ID: ${ssm:bitbucket-client-id}
+  BITBUCKET_SECRET: ${ssm:bitbucket-secret}
+  BYPASS_SECRET: ${ssm:bypass-secret}
+  DIGITALOCEAN_TOKEN: ${ssm:do_token}
+  DO_TOKEN: ${ssm:do_token}
+  JIFFYDNS_PASSWORD: ${ssm:jiffydns-password}
+  JIFFYDNS_USERNAME: ${ssm:jiffydns-username}
+  HOSTED_DB_PASSWORD: ${ssm:mongodb-password}
+  PUBLIC_PASSWORD: ${ssm:mongodb-password}
+  SYSTEM_DB_PASSWORD: ${ssm:mongodb-password}
+  USERS_DB_PASSWORD: ${ssm:mongodb-password}
+  USERS_INFO_PASSWORD: ${ssm:mongodb-password}
+  environment: 
+      JIFFY_SAAS_RUN_ENV: serverless
+      ENABLE_WATCH_DBS: true
+      AWS_ACCOUNT_ID: ${self:provider.AWS_ACCOUNT_ID}
+      AUTH0_CLIENT_ID: ${self:provider.AUTH0_CLIENT_ID}
+      AUTH0_CLIENT_SECRET:  ${self:provider.AUTH0_CLIENT_SECRET}
+      AUTH0_DOMAIN:  ${self:provider.AUTH0_DOMAIN}
+      API_AWS_ACCESS_KEY_ID: ${self:provider.API_AWS_ACCESS_KEY_ID}
+      API_AWS_SECRET_ACCESS_KEY: ${self:provider.API_AWS_SECRET_ACCESS_KEY}
+      BITBUCKET_CLIENT_ID: ${self:provider.BITBUCKET_CLIENT_ID}
+      BITBUCKET_SECRET: ${self:provider.BITBUCKET_SECRET}
+      BYPASS_SECRET: ${self:provider.BYPASS_SECRET}
+      DIGITALOCEAN_TOKEN: ${self:provider.DIGITALOCEAN_TOKEN}
+      DO_TOKEN: ${self:provider.DO_TOKEN}
+      HOSTED_DB_PASSWORD: ${self:provider.HOSTED_DB_PASSWORD}
+      JIFFYDNS_PASSWORD: ${self:provider.JIFFYDNS_PASSWORD}
+      JIFFYDNS_USERNAME: ${self:provider.JIFFYDNS_USERNAME}
+      PUBLIC_PASSWORD: ${self:provider.PUBLIC_PASSWORD}
+      SNS_AWS_ACCESS_KEY_ID: ${self:provider.SNS_AWS_ACCESS_KEY_ID}
+      SNS_AWS_SECRET_ACCESS_KEY: ${self:provider.SNS_AWS_SECRET_ACCESS_KEY}
+      SYSTEM_DB_PASSWORD: ${self:provider.SYSTEM_DB_PASSWORD}
+      USERS_DB_PASSWORD: ${self:provider.USERS_DB_PASSWORD}
+      USERS_INFO_PASSWORD: ${self:provider.USERS_INFO_PASSWORD}
+      JIFFY_SAAS_LOG_DIR: /tmp/log/jiffy-saas
+      JIFFY_SAAS_LOGLEVEL: DEBUG
+      JIFFY_SAAS_CONFIG_DIR: None
+      JIFFYDNS_ENDPOINT: dns-api.elasticdev.io
+      SNS_RUN_ID_BOOTSTRAP: arn:aws:sns:${self:provider.region}:${self:provider.AWS_ACCOUNT_ID}:${self:provider.stage}-bootstrap_run_id_vm
+      SNS_RUN_ID_CREATE: arn:aws:sns:${self:provider.region}:${self:provider.AWS_ACCOUNT_ID}:${self:provider.stage}-create_run_vm
+      SNS_RUN_ID_DESTROY: arn:aws:sns:${self:provider.region}:${self:provider.AWS_ACCOUNT_ID}:${self:provider.stage}-destroy_run_vm
+      SNS_RUN_ID_SCHEDULER: arn:aws:sns:${self:provider.region}:${self:provider.AWS_ACCOUNT_ID}:${self:provider.stage}-run_id_scheduler
+      HOSTED_DB_AUTH: admin
+      HOSTED_DB_DATABASE: hosted_db
+      HOSTED_DB_HOST: ${self:provider.stage}-hosted-db.elasticdev.io
+      HOSTED_DB_NAME: hosted_db
+      HOSTED_DB_PORT: 27017
+      HOSTED_DB_SSL: 1
+      HOSTED_DB_USER: admin
+      JIFFY_SAAS_ENV: ${self:provider.stage}
+      NUM_OF_STANDBY_SERVERS: 2
+      PUBLIC_AUTH: admin
+      PUBLIC_DATABASE: public
+      PUBLIC_HOST: ${self:provider.stage}-public.elasticdev.io
+      PUBLIC_NAME: public
+      PUBLIC_PORT: 27017
+      PUBLIC_SSL: 1
+      PUBLIC_USER: admin
+      RUN_ID_ACTIVE_SCHEDULERS: ${self:provider.stage}-run_id_active_schedulers
+      RUN_ID_CHK_TIME_INTERNAL: 60
+      RUN_ID_TRIGGER_LOCK: ${self:provider.stage}-run_id_trigger_lock
+      RUN_ID_TTL_EXISTS: 10800
+      RUN_ID_TTL_RUN: 7200
+      RUN_ID_WORKERS: ${self:provider.stage}-run_id_workers
+      RUN_ID_WORKER_BOOTSTRAP: ${self:provider.stage}-run_id_bootstrap
+      RUN_ID_WORKER_REQUESTS: ${self:provider.stage}-run_id_worker_requests
+      S3_QHOST_ENVS_BASE: elasticdev.qhost.envs.base
+      SYSTEM_DB_AUTH: admin
+      SYSTEM_DB_DATABASE: system_db
+      SYSTEM_DB_HOST: ${self:provider.stage}-system-db.elasticdev.io
+      SYSTEM_DB_NAME: system_db
+      SYSTEM_DB_PORT: 27017
+      SYSTEM_DB_SSL: 1
+      SYSTEM_DB_USER: admin
+      USERS_DB_AUTH: admin
+      USERS_DB_DATABASE: users_db
+      USERS_DB_HOST: ${self:provider.stage}-users-db.elasticdev.io
+      USERS_DB_NAME: users_db
+      USERS_DB_PORT: 27017
+      USERS_DB_SSL: 1
+      USERS_DB_USER: admin
+      USERS_INFO_AUTH: admin
+      USERS_INFO_DATABASE: users_info
+      USERS_INFO_HOST: ${self:provider.stage}-users-info.elasticdev.io
+      USERS_INFO_NAME: users_info
+      USERS_INFO_PORT: 27017
+      USERS_INFO_SSL: 1
+      USERS_INFO_USER: admin
+functions:
+  api:
+    handler: wsgi_handler.handler
+    timeout: 900
+    memorySize: 192
+    maximumRetryAttempts: 0
+    package:
+        individually: true
+        artifact: /tmp/api-saas-lambda.zip
+    events:
+     - http:
+         method: any
+         path: /{any+}
+         cors: true
