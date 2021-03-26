@@ -1,0 +1,173 @@
+#!/usr/bin/env python
+#
+import os
+import sys
+import yaml
+
+from libs.loggerly import get_logger
+from libs.main_documentdb import Main as documentdb
+from libs.terraform import Main as terraform
+
+class Main(object):
+
+    def __init__(self,**kwargs):
+
+        self.classname = 'Main'
+        self.logger = get_logger(self.classname)[0]
+        self.logger.debug("Instantiating %s" % self.classname)
+
+        self.cwd = os.getcwd()
+        self.config_yml = os.path.join(self.cwd,"config.yml")
+        self.documentdb = documentdb()
+
+        self.documentdb_endpoint = None
+        self.set_env_vars = {}
+
+        # read yml file
+        # set environmental variables
+
+    def _read_yml(self):
+        self.configs = yaml.load(open(self.config_yml).read())
+
+    def clear_env_vars(self):
+
+        if not self.set_env_vars: return
+
+        for _key,_value in self.set_env_vars.iteritems():
+            try:
+                del os.environ[_key]
+            except:
+                continue
+
+    def _set_vars_for_documentdb(self):
+
+        self.set_env_vars["AWS_DEFAULT_REGION"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_aws_default_region"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_region"] = self.configs["aws_default_region"]
+
+        self.set_env_vars["TF_VAR_vpc_id"] = self.configs["vpc_id"]
+        self.set_env_vars["TF_VAR_subnet_ids"] = self.configs["subnet_ids"]
+        self.set_env_vars["TF_VAR_route_table_id"] = self.configs["route_table_id"]
+        self.set_env_vars["TF_VAR_cidr"] = self.configs["cidr"]
+
+        self.set_env_vars["TF_VAR_db_name"] = self.configs["documentdb"]["name"]
+        self.set_env_vars["TF_VAR_instance_class"] = self.configs["documentdb"]["instance_class"]
+        self.set_env_vars["TF_VAR_master_password"] = self.configs["documentdb"]["master_password"]
+        self.set_env_vars["TF_VAR_master_username"] = self.configs["documentdb"]["master_username"]
+        self.set_env_vars["TF_VAR_engine_version"] = self.configs["documentdb"]["engine_version"]
+        self.set_env_vars["TF_VAR_family"] = self.configs["documentdb"]["family"]
+
+        for _key,_value in self.set_env_vars.iteritems():
+            os.environ[_key] = str(_value)
+
+    def _set_vars_for_vpc_endpoints(self):
+
+        self.set_env_vars["AWS_DEFAULT_REGION"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_aws_default_region"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_region"] = self.configs["aws_default_region"]
+
+        self.set_env_vars["TF_VAR_vpc_id"] = self.configs["vpc_id"]
+        self.set_env_vars["TF_VAR_subnet_id"] = self.configs["subnet_ids"].split(",")[0]
+        self.set_env_vars["TF_VAR_route_table_id"] = self.configs["route_table_id"]
+        self.set_env_vars["TF_VAR_cidr"] = self.configs["cidr"]
+
+        self.set_env_vars["TF_VAR_principal_org_id"] = self.configs["principal_org_id"]
+        self.set_env_vars["TF_VAR_repo_name"] = self.configs["application"]["repo_name"]
+
+        for _key,_value in self.set_env_vars.iteritems():
+            os.environ[_key] = str(_value)
+
+    def _set_vars_for_lambda_func(self):
+
+        self.set_env_vars["AWS_DEFAULT_REGION"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_aws_default_region"] = self.configs["aws_default_region"]
+        self.set_env_vars["TF_VAR_region"] = self.configs["aws_default_region"]
+
+        self.set_env_vars["TF_VAR_subnet_ids"] = self.configs["subnet_ids"]
+        self.set_env_vars["TF_VAR_route_table_id"] = self.configs["route_table_id"]
+        self.set_env_vars["TF_VAR_cidr"] = self.configs["cidr"]
+
+        self.set_env_vars["TF_VAR_mongo_password"] = self.configs["documentdb"]["master_password"]
+        self.set_env_vars["TF_VAR_mongo_username"] = self.configs["documentdb"]["master_username"]
+
+        self.set_env_vars["TF_VAR_function_name"] = self.configs["lambda"]["function_name"]
+        self.set_env_vars["TF_VAR_repo_name"] = self.configs["lambda"]["repo_name"]
+        self.set_env_vars["TF_VAR_memory_size"] = self.configs["lambda"]["memory_size"]
+        self.set_env_vars["TF_VAR_timeout"] = self.configs["lambda"]["timeout"]
+        self.set_env_vars["TF_VAR_sns_name"] = self.configs["lambda"]["sns_name"]
+        self.set_env_vars["TF_VAR_image_config_command"] = self.configs["lambda"]["image_config_command"]
+        if self.documentdb_endpoint: self.set_env_vars["TF_VAR_mongo_endpoint"] = self.documentdb_endpoint
+
+        for _key,_value in self.set_env_vars.iteritems():
+            os.environ[_key] = str(_value)
+
+    def _destroy_documentdb(self):
+
+        self._set_vars_for_documentdb()
+        self.documentdb.destroy()
+
+    def _create_documentdb(self):
+
+        self._set_vars_for_documentdb()
+        self.documentdb_endpoint = self.documentdb.create()
+        self.logger.debug("documentdb endpoint is {}".format(self.documentdb_endpoint))
+        self.clear_env_vars()
+
+    def _exec_terraform(self,filename,method="destroy"):
+
+        terraform_dir = os.path.join(self.cwd,"devtools","terraform",filename)
+
+        os.chdir(terraform_dir)
+        _terraform = terraform()
+
+        if method == "create": 
+            return _terraform.create()
+        elif method == "destroy": 
+            return _terraform.destroy()
+
+    def destroy(self):
+
+        self._read_yml()
+
+        self._set_vars_for_lambda_func()
+        self._exec_terraform("sns-to-lambda-container",method="destroy")
+        self.clear_env_vars()
+
+        self._destroy_documentdb()
+
+        self._set_vars_for_vpc_endpoints()
+        self._exec_terraform("vpc_endpoints",method="destroy")
+        self.clear_env_vars()
+
+    def create(self):
+
+        self._read_yml()
+        
+        # create vpc endpoints
+        self._set_vars_for_vpc_endpoints()
+        self._exec_terraform("vpc_endpoints",method="create")
+        self.clear_env_vars()
+
+        # create document db
+        self._create_documentdb()
+
+        # create lambda/fargate workers
+        self._set_vars_for_lambda_func()
+        self._exec_terraform("sns-to-lambda-container",method="create")
+        self.clear_env_vars()
+
+        return 
+
+if __name__ == '__main__':
+
+    main = Main()
+
+    if len(sys.argv) == 2 and sys.argv[1] == "create":
+        main.create()
+    elif len(sys.argv) == 2 and sys.argv[1] == "destroy":
+        main.destroy()
+    else:
+        print("")
+        print("script create/destroy")
+        print("")
+        exit(2)

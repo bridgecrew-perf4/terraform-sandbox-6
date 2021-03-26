@@ -1,0 +1,9 @@
+.terraform.lock.hcl
+.terraform/
+lock
+terraform.tfstate
+terraform.tfstate.backup
+*.swp
+*.swo
+*.swn
+*.pyc

@@ -1,0 +1,32 @@
+resource "aws_vpc_endpoint" "ec2" {
+  vpc_id              = var.vpc_id
+  private_dns_enabled = true
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ec2"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids = [aws_security_group.vpce.id]
+  subnet_ids = [var.subnet_id]
+
+  policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "AccessLimitedResources",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "logs:*",
+            "Condition": {"StringLike":
+              {"aws:PrincipalOrgID":["${var.principal_org_id}"]}
+            },
+            "Resource": "*"
+        }
+
+    ]
+}
+EOF
+
+  tags = {
+    Name        = "sns-endpoint"
+    Environment = "dev"
+  }
+}

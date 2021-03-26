@@ -1,0 +1,22 @@
+aws_default_region: eu-west-1
+vpc_id: vpc-CHANGME
+subnet_ids: subnet-CHANGME,subnet-CHANGME
+route_table_id: rtb-CHANGME
+cidr: 10.0.0.0/8
+principal_org_id: o-CHANGME
+documentdb:
+    name: docdb-demo-injection
+    instance_class: db.t3.medium
+    master_password: admin123
+    master_username: admin123
+    engine_version: 4.0.0
+    family: docdb4.0
+application:
+    repo_name: demo2
+lambda:
+    function_name: demo2-injection
+    repo_name: demo2:latest
+    memory_size: 128
+    timeout: 120
+    sns_name: demo2-injection
+    image_config_command: lambda_consumer.lambda_handler
