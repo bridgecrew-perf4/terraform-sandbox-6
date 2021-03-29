@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+#
+import os
+import sys
+import yaml
+
+from libs.main_mongodb import Main as mongodb
+from libs.loggerly import get_logger
+
+class Main(object):
+
+    def __init__(self,**kwargs):
+
+        self.classname = 'Main'
+        self.logger = get_logger(self.classname)[0]
+        self.logger.debug("Instantiating %s" % self.classname)
+
+        self.cwd = os.getcwd()
+        self.config_yml = os.path.join(self.cwd,"config.yml")
+        self.mongodb = mongodb()
+
+        # read yml file
+        # set environmental variables
+
+    def _read_yml(self):
+
+        self.configs = yaml.load(open(self.config_yml).read())
+
+    def _set_vars_for_mongodb(self):
+
+        os.environ["AWS_DEFAULT_REGION"] = self.configs["aws_default_region"]
+        os.environ["TF_VAR_security_group_ids"] = self.configs["security_group_ids"]
+        os.environ["TF_VAR_subnet_id"] = self.configs["subnet_id"]
+        os.environ["TF_VAR_key_name"] = self.configs["mongodb"]["key_name"]
+        os.environ["TF_VAR_server_count"] = str(self.configs["mongodb"]["server_count"])
+        os.environ["TF_VAR_instance_type"] = self.configs["mongodb"]["instance_type"]
+        os.environ["TF_VAR_server_name_base"] = self.configs["mongodb"]["server_name_base"]
+        os.environ["TF_VAR_volume_size"] = str(self.configs["mongodb"]["volume_size"])
+
+    def _destroy_mongodb(self):
+
+        self._set_vars_for_mongodb()
+        self.mongodb.destroy()
+
+    def _create_mongodb(self):
+
+        self._set_vars_for_mongodb()
+        self.mongodb.create()
+
+    def destroy(self):
+
+        self._read_yml()
+        self._destroy_mongodb()
+
+    def create(self):
+
+        self._read_yml()
+        self._create_mongodb()
+
+        return 
+
+
+if __name__ == '__main__':
+
+    main = Main()
+
+    if len(sys.argv) == 2 and sys.argv[1] == "create":
+        main.create()
+    elif len(sys.argv) == 2 and sys.argv[1] == "destroy":
+        main.destroy()
+    else:
+        print ""
+        print "script create/destroy"
+        print ""
+        exit(2)

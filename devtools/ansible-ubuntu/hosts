@@ -1,0 +1,12 @@
+[private]
+10.30.169.165
+
+[configuration]
+18.163.8.1
+
+[config_network]
+18.163.8.1
+
+[private_main]
+10.30.169.165
+
